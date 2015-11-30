@@ -1,0 +1,26 @@
+{
+    "name": "axy/cli-bin",
+    "type": "library",
+    "description": "Helper for creating console utilities",
+    "keywords": [
+    ],
+    "homepage": "https://github.com/axypro/cli-bin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oleg Grigoriev",
+            "email": "go.vasac@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"        
+    },
+    "autoload": {
+        "psr-4": {
+            "axy\\cli\\bin\\": ""
+        }
+    },
+    "archive": {
+        "exclude": ["/tests/*", "/doc/*", "/cs.sh", "/phpmd.sh", "/*.xml.dist", "/CHANGELOG.md"]
+    }
+}
