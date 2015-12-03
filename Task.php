@@ -47,11 +47,16 @@ abstract class Task
             $this->usage($top);
             return $this->io;
         }
+        if (!$this->loadOpts()) {
+            return $this->io;
+        }
+        $this->process();
         return $this->io;
     }
 
     /**
-     * @param string $top
+     * @param string $top [optional]
+     * @param int $status [optional]
      */
     protected function usage($top = null, $status = null)
     {
@@ -71,6 +76,90 @@ abstract class Task
         }
         $this->io->error($content, $status, false);
     }
+
+    /**
+     * For override
+     */
+    abstract protected function process();
+
+    /**
+     * For override
+     *
+     * @return bool
+     */
+    protected function loadOpts()
+    {
+        return true;
+    }
+
+    /**
+     * Output
+     *
+     * @param string $message
+     * @param bool $nl [optional]
+     */
+    final protected function out($message, $nl = true)
+    {
+        $this->io->write($message, $nl);
+    }
+
+    /**
+     * Write to STDERR
+     *
+     * @param string $message
+     * @param int $status [optional]
+     * @param bool $nl [optional]
+     */
+    final protected function error($message, $status = null, $nl = true)
+    {
+        $this->io->error($message, $status, $nl);
+    }
+
+    /**
+     * Silent read from STDIN
+     *
+     * @param string $prompt [optional]
+     * @param bool $nl [optional]
+     * @return string
+     */
+    final protected function silentRead($prompt = null, $nl = null)
+    {
+        if ($prompt !== null) {
+            $this->io->write($prompt, false);
+        }
+        return $this->io->silentReadLine($nl);
+    }
+
+    /**
+     * Reads entire STDIN
+     *
+     * @return string
+     */
+    final protected function readAll()
+    {
+        return $this->io->readAll();
+    }
+
+    /**
+     * Reads the next line from STDIN
+     *
+     * @return string
+     */
+    final protected function readLine()
+    {
+        return $this->io->readLine();
+    }
+
+    /**
+     * Sets the exit code of the process
+     *
+     * @param int $code
+     */
+    final protected function setStatus($code)
+    {
+        $this->io->setStatus($code);
+    }
+
 
     /**
      * @var \axy\cli\bin\opts\Result

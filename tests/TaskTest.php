@@ -32,4 +32,61 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertSame($err, $io->getLinesErr());
     }
+
+    public function testLoadOpts()
+    {
+        $io = new TestProcess();
+        $args = ['./cmd', '-ab', 'arg'];
+        $cmd = new Cmd($args, $io);
+        $this->assertSame($io, $cmd->run());
+        $this->assertSame(2, $io->getStatus());
+        $this->assertEmpty(trim(implode('', $io->getLinesOut())));
+        $err = [
+            'only -a or -b may be specified',
+            '',
+        ];
+        $this->assertSame($err, $io->getLinesErr());
+    }
+
+    public function testErrorPassword()
+    {
+        $io = new TestProcess(['123456', '67890']);
+        $args = ['./cmd', '-ac5', 'one', 'two'];
+        $cmd = new Cmd($args, $io);
+        $this->assertSame($io, $cmd->run());
+        $this->assertSame(3, $io->getStatus());
+        $out = [
+            'Password: ',
+            'Repeat: ',
+            '',
+        ];
+        $this->assertSame($out, $io->getLinesOut());
+        $err = [
+            'password != repeat',
+            '',
+        ];
+        $this->assertSame($err, $io->getLinesErr());
+    }
+
+    public function testProcess()
+    {
+        $io = new TestProcess(['123456', '123456']);
+        $args = ['./cmd', '-ac5', 'one', 'two'];
+        $cmd = new Cmd($args, $io);
+        $this->assertSame($io, $cmd->run());
+        $this->assertSame(0, $io->getStatus());
+        $this->assertEmpty(trim(implode('', $io->getLinesErr())));
+        $out = [
+            'Password: ',
+            'Repeat: ',
+            'Pass: 123456',
+            'a = 1',
+            'b = ',
+            'c = 5',
+            'one',
+            'two',
+            '',
+        ];
+        $this->assertSame($out, $io->getLinesOut());
+    }
 }

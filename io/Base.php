@@ -32,7 +32,9 @@ abstract class Base implements IProcess
      */
     public function silentReadLine($nl = true)
     {
-        return $this->readLine();
+        $line = $this->readLine();
+        $this->write(PHP_EOL, false);
+        return $line;
     }
 
     /**

@@ -43,7 +43,8 @@ class TestProcessTest extends \PHPUnit_Framework_TestCase
         $expectedOut = [
             'Test',
             'one',
-            'Password: End',
+            'Password: ',
+            'End',
             '',
         ];
         $expectedErr = [
