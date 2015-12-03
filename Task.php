@@ -38,7 +38,38 @@ abstract class Task
      */
     public function run()
     {
+        if ($this->opts->error !== null) {
+            if ($this->opts->error !== '') {
+                $top = '{cmd}: ' . $this->opts->error;
+            } else {
+                $top = '';
+            }
+            $this->usage($top);
+            return $this->io;
+        }
         return $this->io;
+    }
+
+    /**
+     * @param string $top
+     */
+    protected function usage($top = null, $status = null)
+    {
+        $rc = new \ReflectionClass($this);
+        $fn = dirname($rc->getFileName()).'/'.$this->fileUsage;
+        if (is_file($fn)) {
+            $content = rtrim(file_get_contents($fn)).PHP_EOL;
+        } else {
+            $content = '';
+        }
+        if ($top) {
+            $content = $top.PHP_EOL.$content;
+        }
+        $content = str_replace('{cmd}', basename($this->opts->command), $content);
+        if ($status === null) {
+            $status = $this->usageStatusExit;
+        }
+        $this->io->error($content, $status, false);
     }
 
     /**
@@ -54,7 +85,19 @@ abstract class Task
     /**
      * For override
      *
+     * @var int
+     */
+    protected $usageStatusExit = 1;
+
+    /**
+     * For override
+     *
      * @var array
      */
     protected $optionsFormat = [];
+
+    /**
+     * @var string
+     */
+    protected $fileUsage = 'usage.txt';
 }

@@ -1,0 +1,4 @@
+Usage:
+    {cmd} -ab -c3 arg
+
+-a - this is a
