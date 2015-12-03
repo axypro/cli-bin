@@ -32,6 +32,11 @@ class Result
     public $args = [];
 
     /**
+     * @var string
+     */
+    public $error;
+
+    /**
      * Returns the option value
      *
      * @param string $name

@@ -23,13 +23,13 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testParse($argv, $format, $expected)
     {
         $result = Parser::parse($argv, $format);
-        if ($expected === null) {
-            $this->assertNull($result);
-        } else {
-            $this->assertInstanceOf('axy\cli\bin\opts\Result', $result);
+        $this->assertInstanceOf('axy\cli\bin\opts\Result', $result);
+        if (is_array($expected)) {
             foreach ($expected as $k => $v) {
                 $this->assertSame($v, $result->$k, 'result->'.$k);
             }
+        } else {
+            $this->assertSame($expected, $result->error);
         }
     }
 
@@ -150,7 +150,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'b' => false,
                     'c' => true,
                 ],
-                null,
+                'option -b after argument',
             ],
             [
                 ['command', '-xad', 'one', 'two'],
@@ -160,7 +160,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'b' => false,
                     'c' => true,
                 ],
-                null,
+                'illegal option -- d',
             ],
             [
                 ['command', '-ac'],
@@ -170,7 +170,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'b' => false,
                     'c' => true,
                 ],
-                null,
+                'option requires an argument -- c',
             ],
             [
                 [],
@@ -180,7 +180,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'b' => false,
                     'c' => true,
                 ],
-                null,
+                'empty argv',
             ],
         ];
     }

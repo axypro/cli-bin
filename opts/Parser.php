@@ -27,7 +27,8 @@ class Parser
     {
         $result = new Result();
         if (empty($argv)) {
-            return null;
+            $result->error = 'empty argv';
+            return $result;
         }
         $result->command = array_shift($argv);
         $pArgs = false;
@@ -40,7 +41,8 @@ class Parser
             }
             if (substr($arg, 0, 1) === '-') {
                 if ($pArgs) {
-                    return null;
+                    $result->error = 'option '.$arg.' after argument';
+                    return $result;
                 }
                 $len = strlen($arg);
                 if ($len < 2) {
@@ -49,7 +51,8 @@ class Parser
                 for ($i = 1; $i < $len; $i++) {
                     $o = substr($arg, $i, 1);
                     if (!isset($format[$o])) {
-                        return null;
+                        $result->error = 'illegal option -- '.$o;
+                        return $result;
                     }
                     if ($format[$o]) {
                         if ($i < $len - 1) {
@@ -68,7 +71,8 @@ class Parser
             }
         }
         if ($wait !== null) {
-            return null;
+            $result->error = 'option requires an argument -- '.$wait;
+            return $result;
         }
         return $result;
     }
