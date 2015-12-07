@@ -160,7 +160,6 @@ abstract class Task
         $this->io->setStatus($code);
     }
 
-
     /**
      * @var \axy\cli\bin\opts\Result
      */
