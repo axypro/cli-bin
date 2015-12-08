@@ -67,7 +67,7 @@ class TestProcess extends Base
      */
     public function getLinesOut()
     {
-        return explode("\n", implode('', $this->out));
+        return explode("\n", implode('', str_replace("\r", '', $this->out)));
     }
 
     /**
@@ -75,7 +75,7 @@ class TestProcess extends Base
      */
     public function getLinesErr()
     {
-        return explode("\n", implode('', $this->err));
+        return explode("\n", implode('', str_replace("\r", '', $this->err)));
     }
 
     /**
